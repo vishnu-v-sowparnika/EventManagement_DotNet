@@ -21,5 +21,7 @@ namespace EventManagement.Events
         void DeleteEvent(int id);
 
         Task<EventUpdateDTO> Get(int id);
+
+        Task<List<int>> GetRegistrationCount();
     }
 }

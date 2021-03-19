@@ -72,5 +72,12 @@ namespace EventManagement.Events
             var myevent= await _eventRepository.GetAsync(id);
             return ObjectMapper.Map<EventUpdateDTO>(myevent);
         }
+
+        public async Task<List<int>> GetRegistrationCount()
+        {
+            throw new NotImplementedException();
+            var query = await _eventRepository.GetAll().Include(x=>x.Registrations).Select(x => x.Registrations.Count).ToListAsync();
+            return query;
+        }
     }
 }
