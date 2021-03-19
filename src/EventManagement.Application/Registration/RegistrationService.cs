@@ -46,9 +46,14 @@ namespace EventManagement.Registration
             return id;
         }
 
-        public void UnregisterEvent(RegistrationInputDto input)
+        public async  void UnregisterEvent(RegistrationInputDto input)
         {
-            throw new NotImplementedException();
+             //throw new NotImplementedException();
+            var userId = AbpSession.UserId;
+            var regobj =await  _registrationRepository.GetAll().Where(x => x.EventId == input.EventId && x.CreatorUserId == userId).FirstOrDefaultAsync();
+            await _registrationRepository.DeleteAsync(regobj);
+
+            return;
         }
 
         

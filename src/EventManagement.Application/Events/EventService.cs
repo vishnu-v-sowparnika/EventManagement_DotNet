@@ -26,8 +26,9 @@ namespace EventManagement.Events
         public async Task<ListResultDto<EventListDto>> GetAll(GetAllInput input)
         {
 
-            var query = _eventRepository.GetAll().WhereIf(!input.CreatorId.IsNullOrEmpty(), t => t.CreatorUserId == long.Parse(input.CreatorId));
+            var query = _eventRepository.GetAll().WhereIf(!input.CreatorId.IsNullOrEmpty(), t => t.CreatorUserId == long.Parse(input.CreatorId)).WhereIf(!input.Keyword.IsNullOrEmpty(),k=>k.Description.Contains(input.Keyword)|| k.Venue.Contains(input.Keyword));
             var eventobj = await query.Take(input.MaxResultCount).Skip(input.SkipCount).ToListAsync();
+            //var regcounts=query.Select(x=>x.Registrations.Count)
             var eventdto = ObjectMapper.Map<List<EventListDto>>(eventobj);
             return new PagedResultDto<EventListDto>(query.Count(), eventdto);
            // return  new ListResultDto<EventListDto>(eventdto);
@@ -37,7 +38,7 @@ namespace EventManagement.Events
 
         public async Task<PagedResultDto<EventListDto>> GetAllPaged(GetAllInput input)
         {
-            var query = _eventRepository.GetAll().WhereIf(!input.CreatorId.IsNullOrEmpty(), t => t.CreatorUserId == long.Parse(input.CreatorId));
+            var query = _eventRepository.GetAll().WhereIf(!input.CreatorId.IsNullOrEmpty(), t => t.CreatorUserId == long.Parse(input.CreatorId)).WhereIf(!input.Keyword.IsNullOrEmpty(), k => k.Description.Contains(input.Keyword));
             var eventobj = await query.Skip(input.SkipCount).Take(input.MaxResultCount).ToListAsync();
             var eventdto = ObjectMapper.Map<List<EventListDto>>(eventobj);
             return new PagedResultDto<EventListDto>(query.Count(), eventdto);
